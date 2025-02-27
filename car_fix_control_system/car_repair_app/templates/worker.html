@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+    <div class="container">
+        <div class="worker-left-menu">
+            {% if user_form %}
+            <form method="POST">
+                {%csrf_token%}
+                {{user_form.as_p}}            
+                <button type="submit">Zatwierdź edycję</button>
+
+            </form>
+
+            {% else %}
+            <table>
+                Dane pracownika
+                <tr>
+                    <th>Imię</th>
+                    <td> {{worker.user.first_name}}</td>
+                </tr>
+                <tr>
+                    <th>Nazwisko</th>
+                    <td>{{worker.user.last_name}}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{worker.user.email}}</td>
+                </tr>
+                {% if is_manager_or_admin %}
+                <form method="get" action="{% url 'worker-edit' worker.id %}">
+                    {%csrf_token%}
+                    <button type="submit">Edytuj</button>
+                </form>
+                {% endif %}
+                
+            </table>
+            {% endif %}
+            {% if is_manager_or_admin %}
+            <form method="post" action="{% url 'worker-delete' worker.id %}">
+                {% csrf_token %}
+                <button type="submit" style="background-color: red;">Usuń pracownika</button>
+            </form>
+            {% endif %}
+        </div>
+        <div class="worker-central-panel">
+            Historia napraw pracownika
+            <table>
+                <tr>
+                    <th>ID naprawy</th>
+                    <th>auto</th>
+                    <th>data rozpoczęcia naprawy</th>
+                    <th>data zakończenia naprawy</th>
+                    <th>opis</th>
+                    <th>status</th>
+                    
+                </tr>
+                {% for repair in repairs reversed %}
+                
+                    {% if repair.status == 'Wykonana' %}
+                    <tr style="background-color: rgb(110, 202, 136);">
+                    {% elif repair.status == 'W trakcie' %}
+                    <tr style="background-color: rgb(230, 236, 161);">
+                    {% elif repair.status == 'Oczekująca' %}
+                    <tr style="background-color: rgb(248, 168, 154);">
+                    {% endif %}
+                        <td><a href="{% url 'repair-panel' repair.id %}">{{repair.id}}</a></td>
+                        <td>{% if repair.car %}<a href="{% url 'car' repair.car.id %}">{{repair.car.model}}</a>{% endif %}</td>
+                        <td>{{repair.start_date}}</td>
+                        <td>{{repair.end_date}}</td>
+                        <td>{{repair.description}}</td>
+                        <td>{{repair.status}}</td>
+                        
+                    </tr>
+                
+                {% endfor %}
+                
+            </table>
+
+            
+        </div>
+    </div>
+
+{% endblock %}

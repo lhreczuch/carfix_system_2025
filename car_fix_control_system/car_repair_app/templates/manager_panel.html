@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+<div class="container">
+ 
+    <div class="worker-central-panel">
+        <h1>NIEPRZYDZIELONE NAPRAWY</h1>
+        <table>
+            <tr>
+                <th>ID naprawy</th>
+                <th>Id samochodu</th>
+                <th>Model samochodu</th>
+                <th>Opis naprawy</th>
+                <th>Data zarejestrowania naprawy</th>
+                <th>Przypisz</th>
+                
+            </tr>
+            {% for repair,form in repairs_with_forms_list %}
+            
+                <tr>
+                    <td><a href="{% url 'repair-panel' repair.id %}">{{repair.id}}</a></td>
+                    <td><a href="{% url 'car' repair.car.id %}">{{repair.car.id}}</a></td>
+                    <td><a href="{% url 'car' repair.car.id %}">{{repair.car.model}}</a></td>
+                    <td>{{repair.description}}</td>
+                    <td>{{repair.registration_date}}</td>
+                    <td>
+                        <form method="POST" action="{% url 'update-repair-workers' repair.id %}">
+                            {%csrf_token%}
+                            {{form.as_p}}
+                            <input type="hidden" name="request_path" value="{{request.path}}"/>
+                            
+                            
+                            <button type="submit">Przypisz </button>
+
+                        </form>
+                    </td>
+                    
+                </tr>
+            
+            {% endfor %}
+            
+        </table>
+
+        
+    </div>
+    <div class="worker-right-panel">
+        <h2>Moje dane</h2>
+        <table>
+            
+            <tr>
+                <td>Imię</td>
+                <td>{{manager.user.first_name}}</td>
+            </tr>
+            <tr>
+                <td>Nazwisko</td>
+                <td>{{manager.user.last_name}}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{manager.user.email}}</td>
+            </tr>
+            <tr>
+                <td>Login</td>
+                <td>{{manager.user.username}}</td>
+            </tr>
+           
+            
+        </table>
+        <form action="{% url 'password-edit' %}" method="get">
+            <button type="submit" style="background-color: brown; color:aliceblue;">Zmień hasło</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

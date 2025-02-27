@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+    <h1>Add repair</h1>
+<div class="container">
+    
+    <form method="POST" class="add">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Dodaj</button>
+    </form>
+</div>
+
+
+
+{% endblock %}

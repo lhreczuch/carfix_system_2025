@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+<div class="container">
+    
+    <div class="worker-central-panel">
+        <h1>NAPRAWY W KTÓRYCH BIERZESZ UDZIAŁ</h1>
+        <table>
+            <tr>
+                <th>ID naprawy</th>
+                <th>auto</th>
+                <th>data rozpoczęcia naprawy</th>
+                <th>data zakończenia naprawy</th>
+                <th>opis</th>
+                <th>status</th>
+                
+            </tr>
+            {% for repair in worker_repairs %}
+            
+            {% if repair.status == 'Wykonana' %}
+            <tr style="background-color: rgb(110, 202, 136);">
+            {% elif repair.status == 'W trakcie' %}
+            <tr style="background-color: rgb(230, 236, 161);">
+            {% elif repair.status == 'Oczekująca' %}
+            <tr style="background-color: rgb(248, 168, 154);">
+            {% endif %}
+                    <td><a href="{% url 'repair-panel' repair.id %}">{{repair.id}}</a></td>
+                    <td><a href="{% url 'car' repair.car.id %}">{{repair.car.model}}</a></td>
+                    <td>{{ repair.start_date }}</td>
+                    <td>{{repair.end_date}}</td>
+                    <td>{{repair.description}}</td>
+                    <td>{{repair.status}}</td>
+                    
+                </tr>
+            
+            {% endfor %}
+            
+        </table>
+
+        
+    </div>
+    <div class="worker-right-panel">
+        <h2>Moje dane</h2>
+        <table>
+            
+            <tr>
+                <td>Imię</td>
+                <td>{{worker.user.first_name}}</td>
+            </tr>
+            <tr>
+                <td>Nazwisko</td>
+                <td>{{worker.user.last_name}}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{worker.user.email}}</td>
+            </tr>
+           
+            
+        </table>
+        <form action="{% url 'password-edit' %}" method="get">
+            <button type="submit" style="background-color: brown;">Zmień hasło</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

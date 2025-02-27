@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+<div class="container" style="flex-direction: column;">
+
+    <h1>Lista wszystkich pracowników</h1>
+    
+    
+            
+    <div class="table-container">
+    <div class="models-table">
+        <form action="{% url 'add-worker' %}" method="get">
+            <button type="submit">Dodaj pracownika</button>
+        </form>
+        <table border="1">
+            <tr>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Mail</th>
+            </tr>
+            {%for worker in workers%}
+            <tr>
+                
+                <td><a href="{% url 'worker' worker.id %}">{{worker.user.first_name}}</a></td>
+                <td>{{worker.user.last_name}}</td>
+                <td>{{worker.user.email}}</td>
+                
+            </tr>
+            {%endfor%}
+        </table>
+    </div>
+    </div>
+</div>
+
+{% endblock %}

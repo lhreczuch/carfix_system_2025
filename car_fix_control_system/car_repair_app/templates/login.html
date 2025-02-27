@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Website Title</title>
+
+
+</head>
+<body>
+
+    <div class="login-panel-container">
+       
+        
+        <div class="login-central-panel">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Login</button>
+            </form>
+        </div>
+        
+     
+
+
+        
+
+        
+    </div>
+</body>
+</html>

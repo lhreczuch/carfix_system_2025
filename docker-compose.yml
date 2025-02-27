@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  app:
+    volumes:
+      - .:/car_fix_control_system
+    ports:
+      - 80:80
+    image: carfix_08:latest
+    container_name: carfix-container
+    working_dir: /car_fix_control_system/car_fix_control_system
+    command: python manage.py runserver 0.0.0.0:80
+
+
+
+    
+    

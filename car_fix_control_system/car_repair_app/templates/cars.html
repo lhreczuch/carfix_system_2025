@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+<div class="container" style="flex-direction: column">
+    <h1>Lista wszystkich pojazdów</h1>
+    
+    <br>
+   
+    <div class="search-bar">
+    <form>
+        
+        {{ search_form.as_p }}
+        <button type="submit">Wyszukaj</button>
+       
+    </form>
+    <form action="{% url 'cars' %}" method="get">
+        <button type="submit">Resetuj</button>
+    </form>
+    </div>
+    <br>
+    <br>
+    
+    <br>
+    
+            
+    
+    <div class="table-container">
+    <div class="models-table">
+        <form action="{% url 'add-car' %}" method="get">
+            <button type="submit">Dodaj samochód</button>
+        </form>
+        <table border="1">
+            <tr>
+                <th>Car Id</th>
+                <th>Właściciel</th>
+                <th>VIN</th>
+                <th>Data produkcji</th>
+                <th>Producent</th>
+                <th>Model</th>
+                <th>Wersja</th>
+                <th>Generacja</th>
+                <th>Ilość koni mechanicznych</th>
+                <th>Kolor</th>
+                <th>Data dodania auta w systemie</th>
+                <th>Pojemność silnika</th>
+                <th>Przebieg</th>
+            </tr>
+            {% if cars %}
+            {%for car in cars%}
+            <tr>
+                <td><a href="{% url 'car' car.id %}">{{car.id}}</a></td>
+                <td><a href="{% url 'client' car.owner.id %}">{{car.owner}}</a></td>
+                <td>{{car.vin_number}}</td>
+                <td>{{car.production_date}}</td>
+                <td>{{car.producer}}</td>
+                <td>{{car.model}}</td>
+                <td>{{car.version}}</td>
+                <td>{{car.generation}}</td>
+                <td>{{car.horsepowers}}</td>
+                <td>{{car.color}}</td>
+                <td>{{car.registration_date}}</td>
+                <td>{{car.displacement_in_litres}}</td>
+                <td>{{car.mileage}}</td>
+            </tr>
+            {%endfor%}
+            {% endif %}
+        </table>
+    </div>
+    </div>
+</div>
+
+{% endblock %}

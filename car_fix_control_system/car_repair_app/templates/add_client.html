@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+    <h1>Dodaj klienta</h1>
+<div class="container">
+    
+    <form method="POST" class="add">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        {{ client_form.as_p }}
+        <button type="submit">Dodaj</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+<div class="container" style="flex-direction: column;">
+    
+          
+    <h1>Lista wszystkich napraw</h1>
+    
+    <br>
+  
+    <div class="search-bar">
+    
+    <form>
+        
+        </style>
+        {{ search_form.as_p }}
+        <button type="submit">Wyszukaj</button>
+       
+    </form>
+    <form action="{% url 'all-repairs' %}" method="get">
+        <button type="submit">Resetuj</button>
+    </form>
+    </div>
+    <br>
+    <br>
+    <br>
+    
+    <div class="table-container">
+    <div class="models-table">
+        <form action="{% url 'add-repair' %}" method="get">
+            <button type="submit">Dodaj naprawę</button>
+        </form> 
+        <table border="1">
+            <tr>
+                <th>ID naprawy</th>
+                <th>Nazwa naprawy</th>
+                <th>auto</th>
+                <th>data rozpoczęcia naprawy</th>
+                <th>data zakończenia naprawy</th>
+                <th>Przypisani pracownicy</th>
+                <th>opis</th>
+                <th>status</th>
+                
+            </tr>
+            {% for repair in all_repairs reversed %}
+
+                {% if repair.status == 'Wykonana' %}
+                <tr style="background-color: rgb(110, 202, 136);">
+                {% elif repair.status == 'W trakcie' %}
+                <tr style="background-color: rgb(230, 236, 161);">
+                {% elif repair.status == 'Oczekująca' %}
+                <tr style="background-color: rgb(248, 168, 154);">
+                {% endif %}
+
+                    <td><a href="{% url 'repair-panel' repair.id %}">{{repair.id}}</a></td>
+                    <td><a href="{% url 'repair-panel' repair.id %}">{{repair.name}}</a></td>
+                    <td>{% if repair.car %}<a href="{% url 'car' repair.car.id %}">{{repair.car.model}}{% endif %}</a></td>
+                    <td>{{repair.start_date}}</td>
+                    <td>{{repair.end_date}}</td>
+                    <td>
+                        {% for worker in repair.workers.all %}
+                                {% if worker.user == request.user %}
+                                    {{worker.user.first_name}} {{worker.user.last_name}} (ja), 
+                                {% else %}
+
+                                    {% if request.user.groups.first == worker %}
+                                        {{worker.user.first_name}} {{worker.user.last_name}},
+                                    {% else %}
+                                        <a href="{% url 'worker' worker.id %}">{{worker.user.first_name}} {{worker.user.last_name}}, </a>
+                                    {% endif %}
+
+                                
+                                {% endif %}
+                        {% endfor %}
+
+                    </td>
+                    <td>{{repair.description}}</td>
+                    <td>{{repair.status}}</td>
+                    
+                </tr>
+            
+            {% endfor %}
+            
+        </table>
+    </div>
+    </div>
+</div>
+
+{% endblock %}

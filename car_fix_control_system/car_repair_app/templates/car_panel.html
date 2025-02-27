@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+<div class="car-info">
+    <h2>Dane samochodu</h2>
+    <div class="models-table">
+    <table>
+        <tr>
+            <th>VIN</th>
+            <th>data produkcji</th>
+            <th>producent</th>
+            <th>model</th>
+            <th>wersja</th>
+            <th>generacja</th>
+            <th>ilość koni mechanicznych</th>
+            <th>kolor</th>
+            <th>data dodania w systemie</th>
+            <th>pojemność silnika</th>
+            <th>przebieg</th>
+        </tr>
+        <tr>
+            <td>{{car.vin_number}}</td>
+            <td>{{car.production_date}}</td>
+            <td>{{car.producer}}</td>
+            <td>{{car.model}}</td>
+            <td>{{car.version}}</td>
+            <td>{{car.generation}}</td>
+            <td>{{car.horsepowers}}</td>
+            <td>{{car.color}}</td>
+            <td>{{car.registration_date}}</td>
+            <td>{{car.displacement_in_litres}}</td>
+            <td>{{car.mileage}}</td>
+        </tr>
+    </table>
+    </div>
+    {% if is_staff %}
+    <div class="inline-buttons">
+
+        
+    <form action="{% url 'specific-car-add-repair' car.id %}" method="get">
+        <button type="submit">Dodaj naprawę</button>
+    </form>
+   
+    
+    <form action="{% url 'car-edit' car.id %}">
+        {% csrf_token %}
+        <button type="submit" style="background-color: rgb(188, 188, 188);">Edytuj samochód</button>
+    </form>
+    <form method="post" action="{% url 'car-delete' car.id %}">
+        {% csrf_token %}
+        <button type="submit" style="background-color: red;">Usuń samochód</button>
+    </form>
+    </div>
+    {% endif %}
+</div>
+
+<div class="container">
+
+{% if is_staff %}
+<div class="car-left-panel">
+
+    <h2>Dane właściciela</h2>
+    <div class="car_owner_data_box">
+    
+    <table>
+        
+        <tr>
+            <td>ID</td>
+            <td><a href="{% url 'client' car.owner.id %}">{{car.owner.id}}</a></td>
+        </tr>
+        <tr>
+            <td>Imię</td>
+            <td>{{car.owner.user.first_name}}</td>
+        </tr>
+        <tr>
+            <td>Nazwisko</td>
+            <td>{{car.owner.user.last_name}}</td>
+        </tr>
+        <tr>
+            <td>Firma</td>
+            <td>{{car.owner.company_name}}</td>
+        </tr>
+        <tr>
+            <td>NIP</td>
+            <td>{{car.owner.company_id}}</td>
+        </tr>
+        <tr>
+            <td>Kod pocztowy</td>
+            <td>{{car.owner.postal_code}}</td>
+        </tr>
+        <tr>
+            <td>Miasto</td>
+            <td>{{car.owner.city}}</td>
+        </tr>
+        <tr>
+            <td>Ulica</td>
+            <td>{{car.owner.street}}</td>
+        </tr>
+        <tr>
+            <td>Numer domu/mieszkania</td>
+            <td>{{car.owner.street_number}}</td>
+        </tr>
+        <tr>
+            <td>Data dodania</td>
+            <td>{{car.owner.registration_date}}</td>
+        </tr>
+        
+    </table>
+    </div>
+    
+
+</div>
+{% endif %}
+
+<div class="car-right-panel">
+    <h2>Historia napraw samochodu</h2>
+    <div class="car_repairs_data_box">
+    
+    <table>
+        
+        <tr>
+            <th>Data rejestracji naprawy</th>
+            <th>ID naprawy</th>
+            <th>data rozpoczęcia naprawy</th>
+            <th>data zakończenia naprawy</th>
+            {% if is_staff %}<th>opis</th>{% endif %}
+            <th>status</th>
+        </tr>
+        {% for repair in repairs reversed%}
+        
+        {% if repair.status == 'Wykonana' %}
+        <tr style="background-color: rgb(110, 202, 136);">
+        {% elif repair.status == 'W trakcie' %}
+        <tr style="background-color: rgb(230, 236, 161);">
+        {% elif repair.status == 'Oczekująca' %}
+        <tr style="background-color: rgb(248, 168, 154);">
+        {% endif %}
+            <td><b>{{repair.registration_date}}</b></td>
+            <td><a href="{% url 'repair-panel' repair.id %}">{{repair.id}}</a></td>
+            <td>{{repair.start_date}}</td>
+            <td>{{repair.end_date}}</td>
+            {% if is_staff %}<td>{{repair.description}}</td>{% endif %}
+            <td>{{repair.status}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+
+    
+</div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+    <div class="container">
+        <div class="client-template-left-menu">
+            <h2>Dane klienta</h2>
+            {% if client_form and user_form  %}
+            <form method="POST">
+                {%csrf_token%}
+                {{ client_form.as_p }}       
+                {{ user_form.as_p }}        
+                <button type="submit">Zatwierdź edycję</button>
+
+            </form>
+
+            {% else %}
+            
+            <table>
+                <form method="get" action="{% url 'client-edit' client.id %}">
+                    {%csrf_token%}
+                    <button type="submit">Edytuj</button>
+                </form>
+                <tr>
+                    <td>Email</td>
+                    <td> {{client.user.email}}</td>
+                </tr>
+                <tr>
+                    <td>Imię</td>
+                    <td> {{client.user.first_name}}</td>
+                </tr>
+                <tr>
+                    <td>Nazwisko</td>
+                    <td>{{client.user.last_name}}</td>
+                </tr>
+                <tr>
+                    <td>Firma</td>
+                    <td>{{client.company_name}}</td>
+                </tr>
+                <tr>
+                    <td>NIP</td>
+                    <td>{{client.company_number}}</td>
+                </tr>
+                <tr>
+                    <td>Kod pocztowy</td>
+                    <td>{{client.postal_code}}</td>
+                </tr>
+                <tr>
+                    <td>Miasto</td>
+                    <td>{{client.city}}</td>
+                </tr>
+                <tr>
+                    <td>Ulica</td>
+                    <td>{{client.street}}</td>
+                </tr>
+                <tr>
+                    <td>Numer domu/mieszkania</td>
+                    <td>{{client.house_number}}</td>
+                </tr>
+                <tr>
+                    <td>Data dodania</td>
+                    <td>{{client.registration_date}}</td>
+                </tr>
+                
+            </table>
+            {% endif %}
+            <form method="post" action="{% url 'client-delete' client.id %}">
+                {% csrf_token %}
+                <button type="submit" style="background-color: red;">Usuń klienta</button>
+            </form>
+        </div>
+        <div class="client-template-central-panel">
+            
+            <h2>Historia napraw klienta</h2>
+            <table>
+                <tr>
+                    <th>ID naprawy</th>
+                    <th>auto</th>
+                    <th>data rozpoczęcia naprawy</th>
+                    <th>data zakończenia naprawy</th>
+                    <th>opis</th>
+                    <th>status</th>
+                    
+                </tr>
+                {% for repair in repairs %}
+                
+                {% if repair.status == 'Wykonana' %}
+                <tr style="background-color: rgb(110, 202, 136);">
+                {% elif repair.status == 'W trakcie' %}
+                <tr style="background-color: rgb(230, 236, 161);">
+                {% elif repair.status == 'Oczekująca' %}
+                <tr style="background-color: rgb(248, 168, 154);">
+                {% endif %}
+                        <td><a href="{% url 'repair-panel' repair.id %}">{{repair.id}}</a></td>
+                        <td><a href="{% url 'car' repair.car.id %}">{{repair.car.model}}</a></td>
+                        <td>{{ repair.start_date }}</td>
+                        <td>{{ repair.end_date }}</td>
+                        <td>{{repair.description}}</td>
+                        <td>{{ repair.status }}</td>
+                        
+                    </tr>
+                
+                {% endfor %}
+                
+            </table>
+           
+        </div>
+            
+        <div class="client-template-cars">
+            <h2>SAMOCHODY KLIENTA</h2>
+            <form method="get" action="{% url 'specific-client-add-car' client.id %}">
+                    {%csrf_token%}
+                    <button type="submit">Dodaj samochód</button>
+                </form>
+            <table>
+                <tr>
+                    <th>ID samochodu</th>
+                    <th>Producent</th>
+                    <th>Model</th>
+                    <th>Data produkcji</th>
+                    
+                </tr>
+                {% for car in cars %}
+                <tr>
+                    <td><a href="{% url 'car' car.id %}">{{car.id}}</td></a>
+                    <td>{{car.producer}}</td>
+                    <td>{{car.model}}</td>
+                    <td>{{car.production_date}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+            
+    </div>
+
+
+{% endblock %}

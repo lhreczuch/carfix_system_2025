@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %} 
+
+
+
+<div class="container">
+<div class="client-left-panel">
+    <h2>Moje dane</h2>
+    <table>
+        <tr>
+            <th>Email</th>
+            <td>{{client.user.email}}</td>
+        </tr>
+        <tr>
+            <th>Imię</th>
+            <td> {{client.user.first_name}}</td>
+        </tr>
+        <tr>
+            <th>Nazwisko</th>
+            <td>{{client.user.last_name}}</td>
+        </tr>
+        <tr>
+            <th>Firma</th>
+            <td>{{client.company_name}}</td>
+        </tr>
+        <tr>
+            <th>NIP</th>
+            <td>{{client.company_number}}</td>
+        </tr>
+        <tr>
+            <th>Kod pocztowy</th>
+            <td>{{client.postal_code}}</td>
+        </tr>
+        <tr>
+            <th>Miasto</th>
+            <td>{{client.city}}</td>
+        </tr>
+        <tr>
+            <th>Ulica</th>
+            <td>{{client.street}}</td>
+        </tr>
+        <tr>
+            <th>Numer domu/mieszkania</th>
+            <td>{{client.house_number}}</td>
+        </tr>
+        <tr>
+            <th>Data dodania</th>
+            <td>{{client.registration_date}}</td>
+        </tr>
+        
+    </table>
+    <form action="{% url 'password-edit' %}" method="get">
+        <button type="submit" style="background-color: brown;">Zmień hasło</button>
+    </form>
+</div>
+
+<div class="client-central-panel">
+    <h2>MOJE SAMOCHODY</h2>
+    <table>
+        <tr>
+            <th>Car ID</th>
+            <th>Producer</th>
+            <th>model</th>
+            <th>production date</th>
+            
+        </tr>
+        {% for car in cars reversed %}
+        <tr>
+            <td><a href="{% url 'car' car.id %}">{{car.id}}</td></a>
+            <td>{{car.producer}}</td>
+            <td>{{car.model}}</td>
+            <td>{{car.production_date}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="client-right-panel">
+    <h2>Moja historia napraw</h2>
+    <table>
+        <tr>
+            <th>ID naprawy</th>
+            <th>ID samochodu</th>
+            <th>marka</th>
+            <th>status</th>
+            <th>Data zarejestrowania naprawy</th>
+        </tr>
+        {% for repair in client_repairs reversed %}
+
+        {% if repair.status == 'Wykonana' %}
+        <tr style="background-color: rgb(110, 202, 136);">
+        {% elif repair.status == 'W trakcie' %}
+        <tr style="background-color: rgb(230, 236, 161);">
+        {% elif repair.status == 'Oczekująca' %}
+        <tr style="background-color: rgb(248, 168, 154);">
+        {% endif %}
+            <td><a href="{% url 'repair-panel' repair.id %}">{{repair.id}}</td></a>
+            <td>{{repair.car.id}}</td>
+            <td>{{repair.car.model}}</td>
+            <td>{{repair.status}}</td>
+            <td>{{repair.registration_date}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</div>
+{% endblock %}

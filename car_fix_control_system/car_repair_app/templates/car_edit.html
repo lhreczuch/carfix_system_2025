@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+    <h1>Edytuj samochód</h1>
+<div class="container">
+    
+    <form method="POST" class="add">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Zatwierdź edycję</button>
+    </form>
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+<div class="container" style="flex-direction: column; flex-basis: 85%;">
+    <h1>Lista wszystkich klientów</h1>   
+    <br>
+    <div class="search-bar">
+        <form>
+            {{ search_form.as_p }}
+            <button type="submit">Wyszukaj</button>
+        </form>
+        <form action="{% url 'clients' %}" method="get">
+            <button type="submit">Resetuj</button>
+        </form>
+    </div>
+    <br>
+    <br>
+    <div class="table-container">
+        <div class="models-table">
+            <form action="{% url 'add-client' %}" method="get">
+                <button type="submit">Dodaj klienta</button>
+            </form>
+            <table border="1">
+                <tr>
+                    <th>Email</th>
+                    <th>Imię</th>
+                    <th>Nazwisko</th>
+                    <th>Firma</th>
+                    <th>NIP</th>
+                    <th>Kod pocztowy</th>
+                    <th>Miasto</th>
+                    <th>Ulica</th>
+                    <th>Numer ulicy</th>
+                    <th>Data dodania klienta w systemie</th>
+                </tr>
+                {%for client in clients%}
+                <tr>
+                    <td><a href="{% url 'client' client.id %}">{{client.user.email}}</a></td>
+                    <td>{{client.user.first_name}}</td>
+                    <td>{{client.user.last_name}}</td>
+                    <td>{{client.company_name}}</td>
+                    <td>{{client.company_id}}</td>
+                    <td>{{client.postal_code}}</td>
+                    <td>{{client.city}}</td>
+                    <td>{{client.street}}</td>
+                    <td>{{client.street_number}}</td>
+                    <td>{{client.registration_date}}</td>
+                </tr>
+                {%endfor%}
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
