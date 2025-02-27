@@ -28,11 +28,11 @@ class Client(models.Model):
         self.user.set_password(password)
         self.user.username = self.user.email
 
-        # send_mail(
-        #         'Twoje konto klienta!',
-        #           f'Witamy,\n\nPoniżej przekazujemy dane dostępowe do panelu klienta w CarFix: \n\nLOGIN: {self.user.email}\nHASŁO: {password}',
-        #             'CarFix', [self.user.email]
-        #     )
+        send_mail(
+                'Twoje konto klienta!',
+                  f'Witamy,\n\nPoniżej przekazujemy dane dostępowe do panelu klienta w CarFix: \n\nLOGIN: {self.user.email}\nHASŁO: {password}',
+                    'CarFix', [self.user.email]
+            )
         
         super().save(*args,**kwargs)
         
@@ -49,11 +49,11 @@ class Worker(models.Model):
         
         print(password)
             
-        # send_mail(
-        #     'Twoje konto pracownika!',
-        #         f'Witamy,\n\nPoniżej twoje dane do panelu pracowniczego w CarFix: \n\nLOGIN: {self.user.email}\nHASŁO: {password}',
-        #             'CarFix', [self.user.email]
-        #     )
+        send_mail(
+            'Twoje konto pracownika!',
+                f'Witamy,\n\nPoniżej twoje dane do panelu pracowniczego w CarFix: \n\nLOGIN: {self.user.email}\nHASŁO: {password}',
+                    'CarFix', [self.user.email]
+            )
         self.user.set_password(password)
         super().save(*args,**kwargs)
 
@@ -101,11 +101,11 @@ class Repair(models.Model):
         if self.status == 'Wykonana' and not self.end_date:
             self.end_date = timezone.now()
 
-            # send_mail(
-            #     'Twoje auto jest gotowe do odbioru!',
-            #       f'Naprawa ID {self.id} dotycząca samochodu {self.car} została ukończona. \n\n Zapraszamy po odbiór samochodu.',
-            #         'CarFix', [self.car.owner.user.email]
-            # )
+            send_mail(
+                'Twoje auto jest gotowe do odbioru!',
+                  f'Naprawa ID {self.id} dotycząca samochodu {self.car} została ukończona. \n\n Zapraszamy po odbiór samochodu.',
+                    'CarFix', [self.car.owner.user.email]
+            )
 
         elif self.status == 'W trakcie':
             self.start_date = timezone.now()
