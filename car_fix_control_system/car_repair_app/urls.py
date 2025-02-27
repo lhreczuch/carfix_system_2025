@@ -21,9 +21,6 @@ urlpatterns = [
 
     # repair
     path('repairs/<str:pk>',views.repair_panel,name='repair-panel'),
-
-    # propably won't enable deleting repairs - it generates problems. 
-    # path('repairs/<str:pk>/delete',views.repair_delete,name='repair-delete'),
     path('add-repair',views.add_repair,name='add-repair'),
     path('repairs',views.all_repairs,name='all-repairs'),
     path('repairs/<str:pk>/change-status',views.change_repair_status,name='change-repair-status'),

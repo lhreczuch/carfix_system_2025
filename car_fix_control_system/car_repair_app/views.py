@@ -295,15 +295,6 @@ def repair_edit(request,pk):
         return render(request,'repair_edit.html',{'form':form})
     
 
-# propably won't enable deleting repairs - it generates problems. 
-
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# @login_required()
-# @allowed_groups(allowed_groups=['manager', 'worker','admin'])
-# def repair_delete(request,pk):
-#     repair = Repair.objects.get(id=pk)
-#     repair.delete()
-#     return redirect('/repairs')
 
 
 
@@ -353,50 +344,7 @@ def add_car(request):
         form = CarForm()
     return render(request, 'add_car.html',{'form':form})
 
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# @login_required()
-# @allowed_groups(allowed_groups=['manager','worker'])
-# def add_repair(request):
-#     if request.method == "POST":
-#         form = RepairForm(request.POST,user=request.user)
-        
-#         if form.is_valid():
-            
-            
-#             if 'workers' in form.cleaned_data and not request.user.groups.filter(name='manager').exists():
-#                 # Bezpiecznik na poziomie widoku
-#                 return HttpResponse('Brak uprawnień')
-            
-#             repair = form.save(commit=False)
-            
-#             repair.registration_date = date.today()
-#             repair.status = "Oczekująca"
-#             repair.save()
-#             form.save_m2m()
 
-#             RepairActivityLog.objects.create(
-#             repair=repair,
-#             user = request.user,
-#             description = f'Użytkownik {request.user.first_name} {request.user.last_name} utworzył naprawę',
-#             type = 'Utworzenie naprawy',
-#             )
-
-#             if repair.workers.all():
-#                 RepairActivityLog.objects.create(
-#                 repair=repair,
-#                 user = request.user,
-#                 description = f"Przypisanie użytkowników: {', '.join([f'{worker.user.first_name} {worker.user.last_name} (ID: {worker.id})' for worker in repair.workers.all()])}",
-#                 type = 'Edycja przypisania',
-#                 )
-            
-#             return redirect('/repairs')
-
-#     else:
-        
-#         form = RepairForm(user=request.user)
-        
-
-#     return render(request, 'add_repair.html',{'form':form})
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required()
