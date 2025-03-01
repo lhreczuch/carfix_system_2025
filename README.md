@@ -25,7 +25,6 @@ Main functional / non-functional requirements were:
 # Running App
 ### -> App is ready for you to run in Django development mode on development server. 
 ### -> There is also an option to build image and run Docker by using docker-compose.yml folder.
-### -> You can access api docs after running app on /api/docs endpoint. You have to authorize with JWT token to see all API endpoints.
 _______________________________
 Instructions to run app locally:
 
@@ -46,3 +45,5 @@ Instructions to run app using Docker:
 1. Clone repo on your device by use command 'git clone github.com/lhreczuch/carfix_system_2025'
 2. Go to /carfix_system_2025 and run 'docker-compose up' or 'docker compose up'
 3. App is going to be available on port 80 on your device. If you want to change port used on your device change port setting in docker-compose.yml to [your_local_desired_port]:80 and build app again.
+
+### -> You can access api docs after running app on /api/docs endpoint. You have to authorize with JWT token to see all API endpoints.
