@@ -30,7 +30,7 @@ Instructions to run app locally:
 
 ! You have have Python 3.11 and pip installed on your device
 
-1. Clone repo on your device by use command 'git clone github.com/lhreczuch/carfix_system_2025'
+1. Clone repo on your device by use command 'git clone https://github.com/lhreczuch/carfix_system_2025'
 2. Go to /carfix_system_2025 and create local python environment in which you are going to install libraries. Instructions how to create and run local environment: https://docs.python.org/3/library/venv.html
 3. Run command 'pip install -r requirements.py' in local environment
 4. Run 'python car_fix_control_system/manage.py runserver' command to start app on Django development server.
@@ -42,7 +42,7 @@ Instructions to run app using Docker:
 
 ! You have have Docker installed on your device and have a Docker engine running.
 
-1. Clone repo on your device by use command 'git clone github.com/lhreczuch/carfix_system_2025'
+1. Clone repo on your device by use command 'git clone https://github.com/lhreczuch/carfix_system_2025'
 2. Go to /carfix_system_2025 and run 'docker-compose up' or 'docker compose up'
 3. App is going to be available on port 80 on your device. If you want to change port used on your device change port setting in docker-compose.yml to [your_local_desired_port]:80 and build app again.
 
