@@ -1,6 +1,6 @@
-![INSTRUCTIONS HOW TO RUN APP ARE PLACED DOWN BELOW THIS DESCRIPTION]
+# [INSTRUCTIONS HOW TO RUN APP ARE PLACED DOWN BELOW THIS DESCRIPTION]
 
-Project in Django that I was working on since 6.2024 up to 10.2024.
+carfix_system is project in Django that I was working on since 6.2024 up to 10.2024.
 It is an app to help organise work in car repair service. I build this app using Django, Django Rest Framework, HTML and CSS.
 Main functional / non-functional requirements were:
 - there should be authorization process
