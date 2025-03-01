@@ -11,3 +11,12 @@ Instructions to run app locally:
 4. Run 'python car_fix_control_system/manage.py runserver' command to start app on Django development server.
 5. App is going to be available on localhost port 8000.
 6. You can log in by pre created user 'manager' with password '1'. Also if you want to log in to admin panel just use 'admin' user with password '1'.
+
+_______________________________
+Instructions to run app usning Docker:
+
+! You have have Docker installed on your device and have a Docker engine running.
+
+1. Clone repo on your device by use command 'git clone github.com/lhreczuch/carfix_system_2025'
+2. Go to /carfix_system_2025 and run 'docker-compose up' or 'docker compose up'
+3. App is going to be available on port 80 on your device. If you want to change port used on your device change port setting in docker-compose.yml to [your_local_desired_port]:80 and build app again.
