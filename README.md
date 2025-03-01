@@ -23,9 +23,9 @@ Main functional / non-functional requirements were:
 6. I became more comfortable with Django built in model methods like save(), django signals,forms or serializers. Also i got familiar with django errors in debug mode - I recognize them and I'am able to debug many of them without searching web.
 
 # Running App
--> App is ready for you to run in Django development mode on development server. 
--> There is also an option to build image and run Docker by using docker-compose.yml folder.
--> You can access api docs after running app on /api/docs endpoint. You have to authorize with JWT token to see all API endpoints.
+### -> App is ready for you to run in Django development mode on development server. 
+### -> There is also an option to build image and run Docker by using docker-compose.yml folder.
+### -> You can access api docs after running app on /api/docs endpoint. You have to authorize with JWT token to see all API endpoints.
 _______________________________
 Instructions to run app locally:
 
