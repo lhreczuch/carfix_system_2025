@@ -15,8 +15,17 @@ Main functional / non-functional requirements were:
 
 # Main things I learned during creating this App.
 
+1. I got familiar with Postman when I was testing my API and got familiar with GIT - was creating commits in dedicated repo all the time during process.
+2. I learned how to build api with REST rules and how to secure it using JWT token and specify permissions using permission classes.
+3. I learned how to build API docs using OpenAPI
+4. I learned how to operate on manytomany database relations in Django 
+5. I learned how to restrict data rendered by server to web browser based on which user is logged currently logged In. User and its privilleges are being checked on views.py file functions on server side.
+6. I became more comfortable with Django built in model methods like save(), django signals,forms or serializers. Also i got familiar with django errors in debug mode - I recognize them and I'am able to debug many of them without searching web.
+
+# Running App
 -> App is ready for you to run in Django development mode on development server. 
 -> There is also an option to build image and run Docker by using docker-compose.yml folder.
+-> You can access api docs after running app on /api/docs endpoint. You have to authorize with JWT token to see all API endpoints.
 _______________________________
 Instructions to run app locally:
 
