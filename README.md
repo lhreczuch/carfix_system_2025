@@ -26,16 +26,17 @@ Main functional / non-functional requirements were:
 ### -> App is ready for you to run in Django development mode on development server. 
 ### -> There is also an option to build image and run production version on Docker with postgress database and gunicorn web server by using docker-compose.yml folder.
 _______________________________
-Instructions to run app locally:
+Instructions to run app locally with Sqlite database on development server:
 
 ! You have have Python 3.11 and pip installed on your device
 
 1. Clone repo on your device by use command 'git clone https://github.com/lhreczuch/carfix_system_2025'
 2. Go to /carfix_system_2025 and create local python environment in which you are going to install libraries. Instructions how to create and run local environment: https://docs.python.org/3/library/venv.html
 3. Run command 'pip install -r car_fix_control_system/requirements.txt' in local environment
-4. Run 'car_fix_control_system/manage.py runserver' command to start app on Django development server.
-5. App is going to be available on localhost port 8000.
-6. You can log in by pre created user 'manager' with password '1'. Also if you want to log in to admin panel just use 'admin' user with password '1'.
+4. Go to car_fix_control_system\car_fix_control_system and change name of file _dev_settings.py to settings.py
+6. Go to one folder above (folder with manage.py) and run 'python manage.py runserver' command to start app on Django development server.
+7. App is going to be available on localhost port 8000.
+8. You can log in by pre created user 'manager' with password '1'. Also if you want to log in to admin panel just use 'admin' user with password '1'.
 
 _______________________________
 Instructions to run app using Docker:
