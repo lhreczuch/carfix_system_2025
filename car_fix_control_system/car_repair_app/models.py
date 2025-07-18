@@ -95,7 +95,7 @@ class Repair(models.Model):
     registration_date = models.DateTimeField(auto_now_add=True,editable=False)
     start_date = models.DateTimeField(blank=True,null=True)
     end_date = models.DateTimeField(blank=True,null=True)
-    status = models.CharField(max_length=10,choices=STATUS_CHOICES,blank=True,null=True)
+    status = models.CharField(max_length=100,choices=STATUS_CHOICES,blank=True,null=True)
 
     def save(self, *args, **kwargs):
         if self.status == 'Wykonana' and not self.end_date:
@@ -148,7 +148,7 @@ class RepairActivityLog(models.Model):
     repair = models.ForeignKey(Repair, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField()
-    type = models.CharField(max_length=13)
+    type = models.CharField(max_length=30)
     
 class RepairImage(models.Model):
     repair = models.ForeignKey(Repair, on_delete=models.CASCADE)
