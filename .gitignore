@@ -3,7 +3,7 @@ car_fix_control_system/car_repair_app/__pycache__/
 __pycache__/
 pycache/*
 car_fix_control_system/media/*
-*.env
+
 car_fix_control_system/static/
 car_fix_control_system/staticfiles/
 
