@@ -44,7 +44,7 @@ Instructions to run app using Docker with postgres database:
 ! You have have Docker installed on your device and have a Docker engine running.
 
 1. Clone repo on your device by use command 'git clone https://github.com/lhreczuch/carfix_system_2025'
-2. Go to \carfix_system_2025\car_fix_control_system\car_fix_control_system\ and change name of file _prod_settings.py to settings.py
+2. Go to carfix_system_2025\car_fix_control_system\car_fix_control_system\ and change name of file _prod_settings.py to settings.py
 3. Go one directory up (directory with docker-compose.yml) and run 'docker-compose up' or 'docker compose up'
 4. App is going to be available on port 80 on your device. If you want to change port used on your device change port setting in docker-compose.yml to [your_local_desired_port]:80 and build app again.
 5. As there is an fresh database container, you have to create superuser by yourself by "docker exec -it [web_container_name] bash" command and "python manage.py createsuperuser" command inside container.
