@@ -9,6 +9,8 @@ COPY requirements.prod.txt /app/
 
 RUN apt-get update && apt-get install -y \
     libpq-dev gcc --no-install-recommends \
+    apt-get install -y --no-install-recommends ca-certificates && \
+    rm -rf /var/lib/apt/lists/ \
  && pip install --upgrade pip \
  && pip install -r requirements.prod.txt
 

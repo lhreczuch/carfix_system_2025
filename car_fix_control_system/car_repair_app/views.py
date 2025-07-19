@@ -313,6 +313,7 @@ def add_client(request):
                 return HttpResponse("Użytkownik o takim mailu już istnieje!")
 
             user = user_form.save(commit=False)
+            user.username = user_email
             user.save()
 
         if client_form.is_valid():
