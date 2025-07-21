@@ -7,12 +7,14 @@ WORKDIR /app
 
 COPY requirements.prod.txt /app/
 
-RUN apt-get update && apt-get install -y \
-    libpq-dev gcc --no-install-recommends \
-    apt-get install -y --no-install-recommends ca-certificates && \
-    rm -rf /var/lib/apt/lists/ \
- && pip install --upgrade pip \
- && pip install -r requirements.prod.txt
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        libpq-dev \
+        gcc \
+        ca-certificates && \
+    rm -rf /var/lib/apt/lists/* && \
+    pip install --upgrade pip && \
+    pip install -r requirements.prod.txt
 
 COPY . /app/
 
