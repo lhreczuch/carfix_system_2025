@@ -1,29 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
-    <title>My Website Title</title>
+    <meta charset="UTF-8">
+    <title>Carfix System - Login</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #e6f0f7; 
+        }
 
 
+        .login-panel-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 60px);
+        }
+
+        .login-central-panel {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 350px;
+        }
+
+        .login-central-panel h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .login-central-panel label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        .login-central-panel input[type="text"],
+        .login-central-panel input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .login-central-panel button {
+            width: 100%;
+            background-color: #e74c3c; 
+            color: white;
+            border: none;
+            padding: 12px;
+            margin-top: 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .login-central-panel button:hover {
+            background-color: #c0392b;
+        }
+    </style>
 </head>
 <body>
 
+
     <div class="login-panel-container">
-       
-        
         <div class="login-central-panel">
+            <h2>Zaloguj się</h2>
             <form method="POST">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit">Login</button>
             </form>
         </div>
-        
-     
-
-
-        
-
-        
     </div>
+
 </body>
 </html>
