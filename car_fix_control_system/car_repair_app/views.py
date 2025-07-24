@@ -310,7 +310,7 @@ def add_client(request):
         if user_form.is_valid():
             user_email = user_form.cleaned_data['email']
             if User.objects.filter(email=user_email).exists():
-                return HttpResponse("Użytkownik o takim mailu już istnieje!")
+                return HttpResponse("Użytkownik o takim mailu już istnieje! Wróć i ponów wysłanie formularza.")
 
             user = user_form.save(commit=False)
             user.username = user_email
