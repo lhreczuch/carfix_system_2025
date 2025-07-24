@@ -580,7 +580,7 @@ def add_worker(request):
             user_email = form.cleaned_data['email']
 
             if User.objects.filter(email=user_email).exists():
-                return HttpResponse("Użytkownik o takim mailu już istnieje!")
+                return HttpResponse("Użytkownik o takim mailu już istnieje! Ponów.")
             
             user = form.save(commit=False)
             user.username = user_email
