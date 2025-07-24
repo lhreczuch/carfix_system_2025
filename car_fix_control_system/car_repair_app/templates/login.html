@@ -75,6 +75,10 @@
                 {{ form.as_p }}
                 <button type="submit">Login</button>
             </form>
+            {% for message in messages %}
+            <h3 style="color:#d92b31">{{message}}</h3>
+            
+            {% endfor %}
         </div>
     </div>
 

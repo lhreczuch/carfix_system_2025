@@ -138,9 +138,9 @@ def login(request):
                 elif user_role == 'manager':
                     return redirect(f'/manager-panel')
                 else:
-                    return HttpResponse('Błąd: użytkownik nie posiada roli w systemie. Skontaktuj się ze wsparciem technicznym.')
+                    messages.error(request,'Błąd: użytkownik nie posiada roli w systemie. Skontaktuj się ze wsparciem technicznym.')
                 
-            return HttpResponse('Nieprawidłowe dane dostępowe')
+            messages.error(request,'Nieprawidłowe dane dostępowe !')
         return redirect('/login/')
         
            
