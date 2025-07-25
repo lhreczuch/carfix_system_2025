@@ -187,7 +187,12 @@ def car_delete(request,pk):
 @login_required()
 @allowed_groups(allowed_groups=['manager', 'worker','admin'])
 def car_edit(request,pk):
-    car = Car.objects.get(id=pk)
+
+    try:
+        car = Car.objects.get(id=pk)
+    except:
+        return HttpResponse('Nie odnaleziono samochodu')
+    
 
     if request.method == "POST":
         form = CarEditForm(request.POST,instance=car)
@@ -209,8 +214,11 @@ def repair_panel(request,pk):
     except:
         return HttpResponse('Nie odnaleziono naprawy')
 
-    user_role = request.user.groups.first().name if request.user.groups.exists() else None
-
+    try:
+        user_role = request.user.groups.first().name if request.user.groups.exists() else None
+    except:
+        return HttpResponse('Napotkano błąd związany z odnalezieniem roli użytkownika')
+    
     worklog_form = WorkLogForm()
     worklogs = WorkLog.objects.filter(repair=repair)
     image_form = RepairImageForm()
@@ -239,13 +247,13 @@ def repair_panel(request,pk):
         'repair_images':repair_images,
         
     }
-    print(repair_images)
+    
         
     if user_role == 'client':
         if request.user.client == repair.car.owner:
                 
             del context['workers']
-            # del context['repair_comments']
+            
             del context['worklog_form']
             del context['comment_form']
             del context['worklogs']
@@ -271,7 +279,11 @@ def repair_panel(request,pk):
 @allowed_groups(allowed_groups=['manager', 'worker','admin'])
 def repair_edit(request,pk):
 
-    repair = Repair.objects.get(id=pk)
+    try:
+        repair = Repair.objects.get(id=pk)
+    except:
+        return HttpResponse('Nie odnaleziono naprawy')
+    
     form = RepairEditForm(instance=repair)
     initial_data = form.initial
 
@@ -289,7 +301,8 @@ def repair_edit(request,pk):
                 type = 'Edycja naprawy',
                 )
 
-        return redirect(f'/repairs/{pk}')
+            return redirect(f'/repairs/{pk}')
+        return HttpResponse('Błąd walidacji formularza')
     else:
         
         return render(request,'repair_edit.html',{'form':form})
@@ -304,25 +317,35 @@ def repair_edit(request,pk):
 def add_client(request):
     if request.method == "POST":
 
+        user_validated = False
+
         client_form = ClientForm(request.POST)
         user_form = UserEditForm(request.POST)
         
         if user_form.is_valid():
             user_email = user_form.cleaned_data['email']
             if User.objects.filter(email=user_email).exists():
-                return HttpResponse("Użytkownik o takim mailu już istnieje! Wróć i ponów wysłanie formularza.")
+                messages.error(request,"Użytkownik o takim mailu już istnieje!")
+                return redirect('add-client')
 
-            user = user_form.save(commit=False)
-            user.username = user_email
-            user.save()
+            else:
+                user = user_form.save(commit=False)
+                user.username = user_email
+                user.save()
+                user_validated = True
 
-        if client_form.is_valid():
+        else:
+            return HttpResponse("Błąd walidacji formularza")
+        
+        if user_validated and client_form.is_valid():
             client = client_form.save(commit=False)
             client.user = user
             client.save()
 
-
             return redirect('/clients')
+        else:
+            return HttpResponse("Błąd walidacji formularza")
+        
     else:
         client_form = ClientForm()
         user_form = UserEditForm()
@@ -341,6 +364,8 @@ def add_car(request):
             car.registration_date = date.today()
             car.save()
             return redirect('/cars')
+        else: 
+            return HttpResponse("Błąd walidacji formularza")
     else:
         form = CarForm()
     return render(request, 'add_car.html',{'form':form})
@@ -354,7 +379,6 @@ def add_repair(request,pk=None):
     
     if request.method == "POST":
 
-        
         if pk == None:
             form = RepairForm(request.POST,user=request.user)
         else:
@@ -369,18 +393,21 @@ def add_repair(request,pk=None):
 
             repair = form.save(commit=False)
 
+
+            #  jeśli podano parametr z id auta w endpoincie url i nie wyrzuci błędów to przypisz to auto do naprawy:  
             try:
                 car = Car.objects.get(id=pk)
                 repair.car = car
             except:
                 pass
             
-            # repair.registration_date = date.today()
             repair.save()
             form.save_m2m()
 
+
+            # filtracja danych na potrzeby tworzenia logów:
             repair_dict = copy.copy(repair.__dict__)
-            print(repair_dict)
+            
 
             keys_to_delete = ['registration_date','start_date','end_date','car_id']
             for key in keys_to_delete:
@@ -402,6 +429,10 @@ def add_repair(request,pk=None):
                 type = 'Edycja przypisania',
                 )
 
+        else:
+            return HttpResponse("Błąd walidacji formularza")
+
+        # przekierowanie zależnie od tego czy dodanie naprawy było na konkretny aucie czy nie:
         if pk == None:
             return redirect(f'/repairs')
         else:

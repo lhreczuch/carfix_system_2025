@@ -735,6 +735,13 @@
             {% endif %}
 
             <div class='sub-almighty-container'>
+                {% for message in messages %}
+                    {% if "error" in message.tags %}
+                    <h3 style="color:#d92b31">{{message}}</h3>
+                    {% else %}
+                    <h3>{{message}}</h3>
+                    {% endif %}
+                {% endfor %}
                 {% block content %} 
                 {% endblock %}
             </div>
