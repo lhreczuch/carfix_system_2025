@@ -377,42 +377,46 @@ def add_car(request):
 @allowed_groups(allowed_groups=['manager','worker','admin'])
 def add_repair(request,pk=None):
     
-    if request.method == "POST":
+    car = None
+    form_class = RepairForm if pk is None else SpecificCarRepairForm
 
-        if pk == None:
-            form = RepairForm(request.POST,user=request.user)
-        else:
-            form = SpecificCarRepairForm(request.POST,user=request.user)
+    if pk:
         
+        try:    
+            car = Car.objects.get(id=pk)   
+            
+        except Car.DoesNotExist:
+            messages.error(request,'Nie znaleziono samochodu, dla którego próbujesz dodać naprawę!')
+            return redirect('/cars')
+        
+    if request.method == "POST":
+        
+        form = form_class(request.POST,user=request.user)
         
         if form.is_valid():
-
+        
             if 'workers' in form.cleaned_data and not request.user.groups.filter(name='manager').exists():
                 # Bezpiecznik na poziomie widoku
-                return HttpResponse('Brak uprawnień')
+                return HttpResponse('Brak uprawnień', status=403)
 
             repair = form.save(commit=False)
-
-
-            #  jeśli podano parametr z id auta w endpoincie url i nie wyrzuci błędów to przypisz to auto do naprawy:  
-            try:
-                car = Car.objects.get(id=pk)
-                repair.car = car
-            except:
-                pass
             
+            # jeśli jest auto w ramach requestu w url, przypisz to auto do naprawy
+            if car:     
+                    
+                repair.car = car
+                
             repair.save()
             form.save_m2m()
-
-
+        
             # filtracja danych na potrzeby tworzenia logów:
             repair_dict = copy.copy(repair.__dict__)
-            
+             
 
             keys_to_delete = ['registration_date','start_date','end_date','car_id']
             for key in keys_to_delete:
                 del repair_dict[key]
-
+            
 
             RepairActivityLog.objects.create(
             repair=repair,
@@ -420,33 +424,28 @@ def add_repair(request,pk=None):
             description = f'Użytkownik {request.user} utworzył naprawę. Dane: { {k: v for k, v in repair_dict.items() if k != "_state"}}',
             type = 'Utworzenie naprawy',
             )
-
+              
             if repair.workers.all():
+                
+                
                 RepairActivityLog.objects.create(
                 repair=repair,
                 user = request.user,
                 description = f"Przypisani: {', '.join([f'{worker.user.first_name} {worker.user.last_name} (ID: {worker.id})' for worker in repair.workers.all()])}",
                 type = 'Edycja przypisania',
                 )
+                
+            # przekierowanie zależnie od tego czy dodanie naprawy było na konkretny aucie czy nie:    
+            return redirect(f'/cars/{repair.car.id}' if car else '/repairs')
 
         else:
             return HttpResponse("Błąd walidacji formularza")
 
-        # przekierowanie zależnie od tego czy dodanie naprawy było na konkretny aucie czy nie:
-        if pk == None:
-            return redirect(f'/repairs')
-        else:
-            return redirect(f'/cars/{repair.car.id}')
-
     else:
-        if pk == None:
-            form = RepairForm(user=request.user)
-        else:
-            form = SpecificCarRepairForm(user=request.user)
-
+        
+        form = form_class(user=request.user)
         context = {'form':form}
-
-    return render(request, 'add_repair.html',context)
+        return render(request, 'add_repair.html',context)
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

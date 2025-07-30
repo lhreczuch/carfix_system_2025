@@ -89,7 +89,7 @@ class Repair(models.Model):
     ]
 
     name = models.CharField(max_length=50,blank=True,null=True)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, blank=True, null=True)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE)
     description = models.TextField(blank=True,null=True)
     workers = models.ManyToManyField(Worker,symmetrical=False,blank=True) 
     registration_date = models.DateTimeField(auto_now_add=True,editable=False)
