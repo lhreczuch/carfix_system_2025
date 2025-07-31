@@ -615,17 +615,16 @@ def add_worker(request):
             user = form.save(commit=False)
             user.username = user_email
             
-            
             user.save()
 
             workers = Group.objects.get(name='worker') 
             user.groups.add(workers)
             user.save()
 
-            
             return redirect('/workers')
     else:
         form = UserEditForm()
+
     return render(request, 'add_worker.html',{'form':form})
 
     
@@ -639,7 +638,6 @@ def all_repairs(request):
         params_dict = request.GET.dict()
         filter_params = {k: v for k, v in params_dict.items() if v}
 
-        
         query = Q()
 
         for key, value in filter_params.items():
