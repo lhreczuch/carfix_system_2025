@@ -64,7 +64,7 @@ class Manager(models.Model):
         return f"{self.user.first_name} {self.user.last_name}"
 
 class Car(models.Model):
-    owner = models.ForeignKey(Client, on_delete=models.CASCADE, blank=True, null=True)
+    owner = models.ForeignKey(Client, on_delete=models.CASCADE)
     vin_number = models.CharField(max_length=17,blank=True,null=True)
     production_date = models.DateField(blank=True,null=True)
     producer = models.CharField(max_length=40,blank=True,null=True)
@@ -89,7 +89,7 @@ class Repair(models.Model):
     ]
 
     name = models.CharField(max_length=50,blank=True,null=True)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, blank=True, null=True)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE)
     description = models.TextField(blank=True,null=True)
     workers = models.ManyToManyField(Worker,symmetrical=False,blank=True) 
     registration_date = models.DateTimeField(auto_now_add=True,editable=False)
@@ -155,9 +155,7 @@ class RepairImage(models.Model):
     image = models.ImageField(null=True,blank=True,upload_to='images/')
     description = models.CharField(max_length=100)
     creation_date = models.DateTimeField(auto_now_add=True,editable=False)
-    user = models.ForeignKey(User,models.CASCADE,
-        blank=True,
-        null=True,)
+    user = models.ForeignKey(User,models.CASCADE)
     
     
     
