@@ -50,7 +50,14 @@
             {%for car in cars%}
             <tr>
                 <td><a href="{% url 'car' car.id %}">{{car.id}}</a></td>
-                <td><a href="{% url 'client' car.owner.id %}">{{car.owner}}</a></td>
+                <td>
+                    {% if car.owner %}
+                        <a href="{% url 'client' car.owner.id %}">{{ car.owner }}</a>
+                    {% else %}
+                        <span style="color: red;">Użytkownik usunięty</span>
+                    {% endif %}
+                </td>
+
                 <td>{{car.vin_number}}</td>
                 <td>{{car.production_date}}</td>
                 <td>{{car.producer}}</td>

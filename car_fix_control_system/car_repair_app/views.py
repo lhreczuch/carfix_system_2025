@@ -294,12 +294,6 @@ def repair_edit(request,pk):
             form.save()
             new_data = form.cleaned_data
     
-            RepairActivityLog.objects.create(
-                repair=repair,
-                user = request.user,
-                description = f'Użytkownik {request.user} zedytował naprawę. Dane przed edycją: {initial_data} Nowe dane: {new_data}',
-                type = 'Edycja naprawy',
-                )
 
             return redirect(f'/repairs/{pk}')
         return HttpResponse('Błąd walidacji formularza')
@@ -307,6 +301,7 @@ def repair_edit(request,pk):
         
         return render(request,'repair_edit.html',{'form':form})
     
+
 
 
 
@@ -408,32 +403,8 @@ def add_repair(request,pk=None):
                 
             repair.save()
             form.save_m2m()
-        
-            # filtracja danych na potrzeby tworzenia logów:
-            repair_dict = copy.copy(repair.__dict__)
+
              
-
-            keys_to_delete = ['registration_date','start_date','end_date','car_id']
-            for key in keys_to_delete:
-                del repair_dict[key]
-            
-
-            RepairActivityLog.objects.create(
-            repair=repair,
-            user = request.user,
-            description = f'Użytkownik {request.user} utworzył naprawę. Dane: { {k: v for k, v in repair_dict.items() if k != "_state"}}',
-            type = 'Utworzenie naprawy',
-            )
-              
-            if repair.workers.all():
-                
-                
-                RepairActivityLog.objects.create(
-                repair=repair,
-                user = request.user,
-                description = f"Przypisani: {', '.join([f'{worker.user.first_name} {worker.user.last_name} (ID: {worker.id})' for worker in repair.workers.all()])}",
-                type = 'Edycja przypisania',
-                )
                 
             # przekierowanie zależnie od tego czy dodanie naprawy było na konkretny aucie czy nie:    
             return redirect(f'/cars/{repair.car.id}' if car else '/repairs')
@@ -595,7 +566,7 @@ def client_edit_view(request,pk):
 def client_delete(request,pk):
     
     client = Client.objects.get(id=pk)
-    client.user.delete()
+    client.delete()
     return redirect('/clients')
 
     
@@ -674,12 +645,6 @@ def add_comment(request,pk):
         else:
             visibility_type = "Komentarz pracowniczy"
 
-        RepairActivityLog.objects.create(
-            repair=repair,
-            user = request.user,
-            description = f"Komentarz o ID {comment.id} o treści: '{comment.value}'",
-            type = visibility_type
-        )
 
     return redirect(f'/repairs/{pk}')
 
@@ -694,12 +659,6 @@ def comment_delete(request,pk,pk2):
     if request.user == comment.creator or request.user.is_superuser:
         comment.delete()
 
-        RepairActivityLog.objects.create(
-            repair=repair,
-            user = request.user,
-            description = f"Usunięcie komentarza ID: '{pk2}'",
-            type = "Usunięcie komentarza"
-        )
 
     else:
         return HttpResponse("Brak uprawnień")
@@ -725,14 +684,8 @@ def change_repair_status(request,pk):
             
             
         repair.save()
+    return redirect(f'/repairs/{pk}')
 
-        RepairActivityLog.objects.create(
-            repair=repair,
-            user = request.user,
-            description = f'Ustawienie statusu na: {selected_status}',
-            type = 'Ustawienie statusu',
-        )
-        return redirect(f'/repairs/{pk}')
     
 
 
@@ -788,14 +741,6 @@ def update_repair_workers(request,pk):
             repair.save()
             form.save_m2m()
 
-        RepairActivityLog.objects.create(
-            repair=repair,
-            user = request.user,
-            description = f"Przypisani: {', '.join([f'{worker.user.first_name} {worker.user.last_name} (ID: {worker.id})' for worker in repair.workers.all()])}",
-
-            type = 'Edycja przypisania',
-        )
-
     return redirect(request_path)
 
 def log_work(request,pk):
@@ -808,12 +753,6 @@ def log_work(request,pk):
         worklog.repair = repair
         worklog.save()
 
-        RepairActivityLog.objects.create(
-            repair=repair,
-            user = request.user,
-            description = f'Użytkownik zalogował czasu: {worklog.duration()} \n Opis:\n{worklog.comment}',
-            type = 'Zalogowanie czasu',
-        )
 
     return redirect(f'/repairs/{pk}')
 
@@ -831,12 +770,6 @@ def repair_add_image(request,pk):
             image.user = request.user
             image.save()
 
-            RepairActivityLog.objects.create(
-            repair=repair,
-            user = request.user,
-            description = f'Użytkownik {request.user.first_name} {request.user.last_name} dodał zdjęcie ID: {image.id}',
-            type = 'Dodanie zdjęcia',
-            )
     return redirect(f'/repairs/{pk}')
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -849,12 +782,7 @@ def image_delete(request,pk,pk2):
         if image.user == request.user or request.user.is_superuser:
             image.delete()
 
-            RepairActivityLog.objects.create(
-            repair=repair,
-            user = request.user,
-            description = f'Użytkownik {request.user.first_name} {request.user.last_name} usunął zdjęcie ID: {pk2}',
-            type = 'Usunięcie zdjęcia',
-            )
+
     return redirect(f'/repairs/{pk}')
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -1098,34 +1026,10 @@ class RepairListCreate(generics.ListCreateAPIView):
             return super().post(request, *args, **kwargs)
         
             
-    def perform_create(self, serializer):
-        repair = serializer.save()
-        repair_dict = copy.copy(repair.__dict__)
 
-        keys_to_delete = ['registration_date','start_date','end_date','car_id']
-        for key in keys_to_delete:
-            del repair_dict[key]
 
-        RepairActivityLog.objects.create(
-            repair=repair,
-            user = self.request.user,
-            description = f'Użytkownik {self.request.user} utworzył naprawę. Dane: { {k: v for k, v in repair_dict.items()}}',
-            type = 'Utworzenie naprawy',
-            )
-        if repair.workers.all():
-                RepairActivityLog.objects.create(
-                repair=repair,
-                user = self.request.user,
-                description = f"Przypisani: {', '.join([f'{worker.user.first_name} {worker.user.last_name} (ID: {worker.id})' for worker in repair.workers.all()])}",
-                type = 'Edycja przypisania',
-                )
 
-        RepairActivityLog.objects.create(
-            repair=repair,
-            user = self.request.user,
-            description = f'Ustawienie statusu na: {repair.status}',
-            type = 'Ustawienie statusu',
-        )
+
 
 
 
@@ -1167,60 +1071,6 @@ class RepairRetrieve(generics.RetrieveUpdateAPIView):
         else:
             return super().partial_update(request, *args, **kwargs)
     
-    # propably won't enable deleting repairs - it generates problems. 
-
-    # def delete(self, request, *args, **kwargs):
-    #     if request.user.groups.first().name == 'client':
-    #         raise PermissionDenied('Brak dostępu')
-    #     else:
-    #         return super().destroy(request, *args, **kwargs)
-        
-    def perform_update(self, serializer):
-        original_repair = self.get_object()
-        original_repair_workers_copy = copy.copy(original_repair.workers.all())
-        original_fields = copy.copy(original_repair.__dict__)
-
-        repair = serializer.save()
-        
-        repair_dict = copy.copy(repair.__dict__)
-        keys_to_delete = ['registration_date','start_date','end_date','car_id','_state']
-
-        for key in keys_to_delete:
-            del repair_dict[key]
-            del original_fields[key]
-
-        if original_fields['status'] != repair_dict['status']:
-            RepairActivityLog.objects.create(
-            repair=repair,
-            user = self.request.user,
-            description = f"Ustawienie statusu na: {repair_dict['status']}",
-            type = 'Ustawienie statusu',
-        )
-            
-        del original_fields['status']
-        del repair_dict['status']
-            
-        if original_fields != repair_dict:
-            RepairActivityLog.objects.create(
-                repair=repair,
-                user = self.request.user,
-                description = f'Użytkownik {self.request.user} zedytował naprawę. Dane przed edycją: { {k: v for k, v in original_fields.items()}}. Nowe dane: { {k: v for k, v in repair_dict.items()} }',
-                type = 'Edycja naprawy',
-                )
-            
-        if list(original_repair_workers_copy) == list(repair.workers.all()): 
-            pass
-        else:
-            
-            RepairActivityLog.objects.create(
-                repair=repair,
-                user = self.request.user,
-                description = f"Przypisani: {', '.join([f'{worker.user.first_name} {worker.user.last_name} (ID: {worker.id})' for worker in repair.workers.all()])}",
-                type = 'Edycja przypisania',
-                )
-        
-
-        
 
 # repair comments
 
@@ -1254,6 +1104,8 @@ class CommentListCreate(generics.ListCreateAPIView):
             return comments
         
     def post(self,request, *args, **kwargs):
+
+
         if request.user.groups.first().name == 'client':
             raise PermissionDenied('Brak dostępu')
         else:
@@ -1261,22 +1113,10 @@ class CommentListCreate(generics.ListCreateAPIView):
         
     def perform_create(self, serializer):
         repair_id = self.kwargs['pk']
-        repair = Repair.objects.get(id=repair_id)
-
-        comment = serializer.save(creator=self.request.user,repair=repair)
-
-        if comment.visible_for_client:
-            comment_type = 'Komentarz publiczny'
-        else:
-            comment_type = "Komentarz niepubliczny"
-
-        RepairActivityLog.objects.create(
-            repair=repair,
-            user = self.request.user,
-            description = f"Komentarz o ID {comment.id} o treści: '{comment.value}'",
-            type = comment_type
-        )
-
+        repair = get_object_or_404(Repair,id=repair_id)
+        user=self.request.user
+        serializer.save(creator=user,repair=repair)
+        
 
 
 class CommentRetrieveDestroy(generics.RetrieveDestroyAPIView):
@@ -1305,21 +1145,6 @@ class CommentRetrieveDestroy(generics.RetrieveDestroyAPIView):
         else:
             raise PermissionDenied('Brak dostępu')
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
-    def perform_destroy(self, instance):
-        instance_id_copy = copy.copy(instance.id)
-        super().perform_destroy(instance)
-  
-        repair_id = self.kwargs['pk']
-        repair = Repair.objects.get(id=repair_id)
-
-        RepairActivityLog.objects.create(
-            repair=repair,
-            user = self.request.user,
-            description = f"Usunięcie komentarza o ID {instance_id_copy} o treści: '{instance.value}'",
-            type = "Usunięcie komentarza"
-        )
-        
 
 
 
@@ -1349,14 +1174,9 @@ class WorklogListCreate(generics.ListCreateAPIView):
         repair_id = self.kwargs['pk']
         repair = get_object_or_404(Repair,id=repair_id)
         worker = get_object_or_404(Worker,user=self.request.user)
-        worklog = serializer.save(worker=worker,repair=repair)
+        serializer.save(worker=worker,repair=repair)
 
-        RepairActivityLog.objects.create(
-            repair=repair,
-            user = self.request.user,
-            description = f'Użytkownik zalogował czasu: {worklog.duration()} \n Opis:\n{worklog.comment}',
-            type = 'Zalogowanie czasu',
-        )
+
 
 
 class ActivitylogList(generics.ListAPIView):
@@ -1457,14 +1277,9 @@ class ImageListCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         repair_id = self.kwargs['pk']
         repair = get_object_or_404(Repair,id=repair_id)
-        image = serializer.save(repair=repair,user=self.request.user)
+        serializer.save(repair=repair,user=self.request.user)
 
-        RepairActivityLog.objects.create(
-            repair=repair,
-            user = self.request.user,
-            description = f'Użytkownik {self.request.user.first_name} {self.request.user.last_name} dodał zdjęcie ID: {image.id}',
-            type = 'Dodanie zdjęcia',
-            )
+
 
         
 
@@ -1493,26 +1308,8 @@ class ImageRetrieve(generics.RetrieveDestroyAPIView):
             repair = get_object_or_404(Repair,id=repair_id)
 
             comment_id = self.kwargs['pk2']
-            comment_id_copy = copy.copy(comment_id)
-
-
-            RepairActivityLog.objects.create(
-                repair=repair,
-                user = self.request.user,
-                description = f'Użytkownik {self.request.user.first_name} {self.request.user.last_name} usunął zdjęcie ID: {comment_id_copy}',
-                type = 'Usunięcie zdjęcia',
-                )
+            
         else:
             raise PermissionDenied('Brak dostępu')
 
-        
-
-
-
-       
-
-# function for tests
-# def test(request):
-#     send_mail('asdasd', 'asdasd', 'hreczix', ['hreczuch.lukasz@gmail.com'])
-#     return render(request, 'test.html')
 

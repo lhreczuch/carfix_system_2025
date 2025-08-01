@@ -54,13 +54,21 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = RepairComment
         fields = '__all__'
-        read_only_fields = ['creation_date']
+        read_only_fields = ['creation_date','repair','creator']
+
+  
+
+        
 
 class WorkLogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WorkLog
         fields = '__all__'
+
+        read_only_fields = ['worker','repair','start_date','end_date']
+
+
 
 class RepairActivityLogSerializer(serializers.ModelSerializer):
 

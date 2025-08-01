@@ -61,13 +61,27 @@
                     <td>
                         {% for worker in repair.workers.all %}
                                 {% if worker.user == request.user %}
-                                    {{worker.user.first_name}} {{worker.user.last_name}} (ja), 
+                                    {% if worker.user %}
+                                    {{ worker.user.first_name }} {{ worker.user.last_name }} (ja),
+                                    {% else %}
+                                    <span style="color: red;">Użytkownik usunięty (ja)</span>
+                                    {% endif %}
                                 {% else %}
 
                                     {% if request.user.groups.first == worker %}
-                                        {{worker.user.first_name}} {{worker.user.last_name}},
+                                        {% if worker.user %}
+                                        {{ worker.user.first_name }} {{ worker.user.last_name }},
+                                        {% else %}
+                                        <span style="color: red;">Użytkownik usunięty</span>
+                                        {% endif %}
+
                                     {% else %}
-                                        <a href="{% url 'worker' worker.id %}">{{worker.user.first_name}} {{worker.user.last_name}}, </a>
+                                        {% if worker.user %}
+                                        <a href="{% url 'worker' worker.id %}">{{ worker.user.first_name }} {{ worker.user.last_name }},</a>
+                                        {% else %}
+                                        <span style="color: red;">Użytkownik usunięty</span>
+                                        {% endif %}
+
                                     {% endif %}
 
                                 
