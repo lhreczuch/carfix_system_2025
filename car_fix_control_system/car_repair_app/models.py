@@ -64,7 +64,7 @@ class Manager(models.Model):
         return f"{self.user.first_name} {self.user.last_name}"
 
 class Car(models.Model):
-    owner = models.ForeignKey(Client, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True)
     vin_number = models.CharField(max_length=17,blank=True,null=True)
     production_date = models.DateField(blank=True,null=True)
     producer = models.CharField(max_length=40,blank=True,null=True)
@@ -121,7 +121,7 @@ class Repair(models.Model):
         return f"{self.name}"
 
 class RepairComment(models.Model):
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     visible_for_client = models.BooleanField(default=False)
     repair = models.ForeignKey(Repair, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(auto_now_add=True,editable=False)
@@ -131,7 +131,7 @@ class RepairComment(models.Model):
 
 
 class WorkLog(models.Model):
-    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    worker = models.ForeignKey(Worker, on_delete=models.SET_NULL, null=True)
     repair = models.ForeignKey(Repair, on_delete=models.CASCADE)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
@@ -146,7 +146,7 @@ class WorkLog(models.Model):
 class RepairActivityLog(models.Model):
     time = models.DateTimeField(auto_now_add=True,editable=False)
     repair = models.ForeignKey(Repair, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     description = models.TextField()
     type = models.CharField(max_length=30)
     
@@ -155,7 +155,7 @@ class RepairImage(models.Model):
     image = models.ImageField(null=True,blank=True,upload_to='images/')
     description = models.CharField(max_length=100)
     creation_date = models.DateTimeField(auto_now_add=True,editable=False)
-    user = models.ForeignKey(User,models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
     
     
     

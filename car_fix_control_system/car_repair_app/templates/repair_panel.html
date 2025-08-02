@@ -42,7 +42,14 @@
                                 {% if request.user.groups.first == worker %}
                                     {{worker.user.first_name}} {{worker.user.last_name}},
                                 {% else %}
-                                    <a href="{% url 'worker' worker.id %}">{{worker.user.first_name}} {{worker.user.last_name}}, </a>
+                                    {% if worker.user %}
+                                    <a href="{% url 'worker' worker.id %}">
+                                        {{ worker.user.first_name }} {{ worker.user.last_name }},
+                                    </a>
+                                    {% else %}
+                                    <span style="color: red;">Użytkownik usunięty</span>
+                                    {% endif %}
+
                                 {% endif %}
 
                             
