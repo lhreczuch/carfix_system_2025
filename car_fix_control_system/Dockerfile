@@ -15,9 +15,11 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     pip install --upgrade pip && \
     pip install -r requirements.prod.txt
+    
 
 COPY . /app/
 
+RUN cp ./car_fix_control_system/_prod_settings.py car_fix_control_system/settings.py 
 
 EXPOSE 8000
 
