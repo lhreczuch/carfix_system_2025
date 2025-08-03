@@ -6,7 +6,7 @@ car_fix_control_system/media/*
 
 car_fix_control_system/static/
 car_fix_control_system/staticfiles/
-**/.env
+
 
 
 

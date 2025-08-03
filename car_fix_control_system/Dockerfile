@@ -19,8 +19,6 @@ RUN apt-get update && \
 
 COPY . /app/
 
-RUN cp ./car_fix_control_system/_prod_settings.py car_fix_control_system/settings.py 
-
 EXPOSE 8000
 
 CMD ["gunicorn", "car_fix_control_system.wsgi:application", "--bind", "0.0.0.0:8000"]

@@ -47,7 +47,7 @@ class Worker(models.Model):
     def save(self,*args,**kwargs):
         password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
         
-        print(password)
+   
             
         send_mail(
             'Twoje konto pracownika!',

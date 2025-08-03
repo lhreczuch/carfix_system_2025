@@ -432,7 +432,7 @@ def cars(request):
         query = Q()
 
         for key, value in filter_params.items():
-            print(key,value)
+
             if key == 'owner':
                 query &= Q(**{key: value})
             else:
@@ -811,7 +811,6 @@ def repair_csv(request,pk):
     writer.writerow(['time','user','type','description'])
     
     for log in activity_logs:
-        print(log.time)
         writer.writerow([log.time,log.user,log.type,log.description])
 
     return response
@@ -831,10 +830,10 @@ def report_pdf(request, pk):
     doc = SimpleDocTemplate(response, pagesize=A4, rightMargin=30, leftMargin=30)
 
     # 🔹 Rejestracja czcionki Arial z lokalnego katalogu Windows
-    pdfmetrics.registerFont(TTFont('Arial', 'C:/Windows/Fonts/arial.ttf'))
-    pdfmetrics.registerFont(TTFont('Arial-Bold', 'C:/Windows/Fonts/arialbd.ttf'))
-    pdfmetrics.registerFont(TTFont('Arial-Italic', 'C:/Windows/Fonts/ariali.ttf'))
-    pdfmetrics.registerFont(TTFont('Arial-BoldItalic', 'C:/Windows/Fonts/arialbi.ttf'))
+    pdfmetrics.registerFont(TTFont('Arial', '/app/car_repair_app/fonts/arial.ttf'))
+    pdfmetrics.registerFont(TTFont('Arial-Bold', '/app/car_repair_app/fonts/arialbd.ttf'))
+    pdfmetrics.registerFont(TTFont('Arial-Italic', '/app/car_repair_app/fonts/ariali.ttf'))
+    pdfmetrics.registerFont(TTFont('Arial-BoldItalic', '/app/car_repair_app/fonts/arialbi.ttf'))
 
     # 🔹 Style dla tekstu
     styles = getSampleStyleSheet()
