@@ -24,7 +24,7 @@ Main functional / non-functional requirements were:
 
 # Running App
 ### -> App is ready for you to run in Django development mode on development server. 
-### -> There is also an option to build image and run production version on Docker with postgress database and gunicorn web server by using docker-compose.yml folder.
+### -> There is also an option to build image and run production version on Docker with postgress database and gunicorn web server by using docker-compose.yml file.
 _______________________________
 Instructions to run app locally with Sqlite database on development server:
 
